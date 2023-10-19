@@ -2,7 +2,7 @@
 vska - btw idk what half of this does :)
 """
 import sys
-from urllib.parse import parse_qsl
+from urlparse import parse_qsl
 
 import xbmcgui
 import xbmcplugin
