@@ -7,13 +7,11 @@ from urlparse import parse_qsl
 import xbmcgui
 import xbmcplugin
 from xbmcaddon import Addon
-from xbmcvfs import translatePath
 
 from resources.lib.vidsrc import movie, episode
 
 URL = sys.argv[0]
 HANDLE = int(sys.argv[1])
-ADDON_PATH = translatePath(Addon().getAddonInfo('path'))
 
 def play_video(url):
     """
