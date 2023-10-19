@@ -20,7 +20,7 @@ def movie(external_id):
     I wonder what this function does?
     """
     # data_id=$(curl -s "https://vidsrc.to/embed/movie/tt2084970 | sed -nE "s@.*data-id=\"([^\"]*)\".*@\1@p")
-    data_id_response = requests.get(f"https://vidsrc.to/embed/movie/{external_id}", timeout=10)
+    data_id_response = requests.get("https://vidsrc.to/embed/movie/" + external_id, timeout=10)
     pattern = r'.*data-id="([^"]*)".*'
     data_id = match_regex(pattern, data_id_response.text)
     # print("Data ID", data_id)
@@ -33,7 +33,7 @@ def episode(external_id, season, episode_number):
     This function does... something?
     """
     # data_id=$(curl -s "https://vidsrc.to/embed/movie/tt2084970 | sed -nE "s@.*data-id=\"([^\"]*)\".*@\1@p")
-    data_id_response = requests.get(f"https://vidsrc.to/embed/tv/{external_id}/{season}/{episode_number}", timeout=10)
+    data_id_response = requests.get("https://vidsrc.to/embed/tv/" + external_id + "/" + season + "/" + episode_number, timeout=10)
     pattern = r'.*data-id="([^"]*)".*'
     data_id = match_regex(pattern, data_id_response.text)
     # print("Data ID", data_id)
@@ -48,7 +48,7 @@ def _extract(data_id):
     base_helper_url = "https://9anime.eltik.net"
 
     # vidplay_id=$(curl -s "https://vidsrc.to/ajax/embed/episode/${data_id}/sources" | tr '{}' '\n' | sed -nE "s@.*\"id\":\"([^\"]*)\".*\"Vidplay.*@\1@p")
-    vidplay_id_response = requests.get(f"https://vidsrc.to/ajax/embed/episode/{data_id}/sources", timeout=10)
+    vidplay_id_response = requests.get("https://vidsrc.to/ajax/embed/episode/" + data_id + "/sources", timeout=10)
     pattern = r'\"id\":\"([^\"]*)\".*\"Vidplay'
     vidplay_id = match_regex(pattern, vidplay_id_response.text)
     # print("Vidplay ID", vidplay_id)
@@ -56,7 +56,7 @@ def _extract(data_id):
         return
 
     # encrypted_provider_url=$(curl -s "https://vidsrc.to/ajax/embed/source/${vidplay_id}" | sed -nE "s@.*\"url\":\"([^\"]*)\".*@\1@p")
-    encrypted_provider_url_response = requests.get(f"https://vidsrc.to/ajax/embed/source/{vidplay_id}", timeout=10)
+    encrypted_provider_url_response = requests.get("https://vidsrc.to/ajax/embed/source/" + vidplay_id, timeout=10)
     pattern = r'\"url\":\"([^\"]*)\"'
     encrypted_provider_url = match_regex(pattern, encrypted_provider_url_response.text)
     # print("Encrypted URL", encrypted_provider_url)
@@ -64,7 +64,7 @@ def _extract(data_id):
         return
 
     # provider_embed=$(curl -s "$base_helper_url/fmovies-decrypt?query=${encrypted_provider_url}&apikey=jerry" | sed -nE "s@.*\"url\":\"([^\"]*)\".*@\1@p")
-    provider_embed_response = requests.get(f"{base_helper_url}/fmovies-decrypt?query={encrypted_provider_url}&apikey=jerry", timeout=10)
+    provider_embed_response = requests.get(base_helper_url + "/fmovies-decrypt?query=" + encrypted_provider_url + "&apikey=jerry", timeout=10)
     pattern = r'\"url\":\"([^\"]*)\"'
     provider_embed = match_regex(pattern, provider_embed_response.text)
     # print("Provider Embed URL", provider_embed)
@@ -93,7 +93,7 @@ def _extract(data_id):
         return
     
     # raw_url=$(curl -s "$base_helper_url/rawvizcloud?query=${provider_query}&apikey=jerry" -d "query=${provider_query}&futoken=${futoken}" | sed -nE "s@.*\"rawURL\":\"([^\"]*)\".*@\1@p")
-    raw_url_response = requests.post(f"{base_helper_url}/rawvizcloud?query={provider_query}&apikey=jerry", data={"query": provider_query, "futoken": futoken}, timeout=10)
+    raw_url_response = requests.post(base_helper_url + "/rawvizcloud?query=" + provider_query + "&apikey=jerry", data={"query": provider_query, "futoken": futoken}, timeout=10)
     pattern = r'\"rawURL\":\"([^\"]*)\"'
     raw_url = match_regex(pattern, raw_url_response.text)
     # print("Raw URL", raw_url)
@@ -101,7 +101,7 @@ def _extract(data_id):
         return
 
     # video_link=$(curl -s "$raw_url${params}" -e "$provider_embed" | sed "s/\\\//g" | sed -nE "s@.*file\":\"([^\"]*)\".*@\1@p")
-    video_link_response = requests.get(f"{raw_url}{params}", headers={"Referer": provider_embed}, timeout=10)
+    video_link_response = requests.get(raw_url + params, headers={"Referer": provider_embed}, timeout=10)
     cd_link = re.sub(r'\\/', '/', video_link_response.text)
     pattern = r'\"file\":\"([^\"]*)\"'
     matches = re.search(pattern, cd_link)
