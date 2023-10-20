@@ -72,16 +72,22 @@ def listing(source):
         list_item = xbmcgui.ListItem(label=link["title"])
         title = link["title"]
         href = link["href"]
+        playable = link["playable"]
         list_item.setInfo("video", {
             "title": title,
             "genre": title,
             "mediatype": "video"
         })
-        url = build_url(mode="listing", source=href)
+        mode = "play" if playable else "listing"
+        url = build_url(mode=mode, source=href)
         xbmcplugin.addDirectoryItem(HANDLE, url, list_item, True)
 
     xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     xbmcplugin.endOfDirectory(HANDLE)
+
+def play(source):
+    play_item = xbmcgui.ListItem(path=source)
+    xbmcplugin.setResolvedUrl(HANDLE, True, listitem=play_item)
 
 def validate_source(source):
     if not source:
@@ -113,6 +119,9 @@ def router(paramstring):
         elif mode == "listing":
             validate_source(source)
             listing(source)
+        elif mode == "play":
+            validate_source(source)
+            play(source)
 
 if __name__ == '__main__':
     router(sys.argv[2][1:])
