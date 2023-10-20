@@ -45,30 +45,10 @@ def list_searchables():
     xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     xbmcplugin.endOfDirectory(HANDLE)
 
-def list_movies(query):
-    results = search_movie(query)
-    xbmcplugin.setPluginCategory(HANDLE, "edyka - " + query)
-    xbmcplugin.setContent(HANDLE, "videos")
-    for result in results:
-        list_item = xbmcgui.ListItem(label=result["title"])
-        title = result["title"]
-        href = result["href"]
-        list_item.setInfo("video", {
-            "title": title,
-            "genre": title,
-            "mediatype": "video"
-        })
-        url = build_url(mode="listing", source=href)
-        xbmcplugin.addDirectoryItem(HANDLE, url, list_item, True)
-
-    xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
-    xbmcplugin.endOfDirectory(HANDLE)
-
-def listing(source):
-    links = get_links(source)
+def _listing(edy_items):
     xbmcplugin.setPluginCategory(HANDLE, "edyka - listing")
     xbmcplugin.setContent(HANDLE, "videos")
-    for link in links:
+    for link in edy_items:
         list_item = xbmcgui.ListItem(label=link["title"])
         title = link["title"]
         href = link["href"]
@@ -90,6 +70,18 @@ def listing(source):
 
     xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     xbmcplugin.endOfDirectory(HANDLE)
+
+def list_movies(query):
+    results = search_movie(query)
+    _listing(results)
+
+def list_tv(query):
+    results = search_tv(query)
+    _listing(results)
+
+def list_links(source):
+    links = get_links(source)
+    _listing(links)
 
 def play(source):
     play_item = xbmcgui.ListItem(path=source)
@@ -121,10 +113,14 @@ def router(paramstring):
             else:
                 quit()
         elif mode == "searchtv":
-            raise NotImplementedError("Not implemented yet")
+            query = xbmcgui.Dialog().input('Search tv...', type=xbmcgui.INPUT_ALPHANUM)
+            if query:
+                list_tv(query)
+            else:
+                quit()
         elif mode == "listing":
             validate_source(source)
-            listing(source)
+            list_links(source)
         elif mode == "play":
             validate_source(source)
             play(source)
