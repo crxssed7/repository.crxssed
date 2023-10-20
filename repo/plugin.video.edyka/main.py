@@ -78,9 +78,15 @@ def listing(source):
             "genre": title,
             "mediatype": "video"
         })
-        mode = "play" if playable else "listing"
-        url = build_url(mode=mode, source=href)
-        xbmcplugin.addDirectoryItem(HANDLE, url, list_item, True)
+        if playable:
+            m = "play"
+            is_folder = False
+            list_item.setProperty('IsPlayable', 'true')
+        else:
+            m = "listing"
+            is_folder = True
+        url = build_url(mode=m, source=href)
+        xbmcplugin.addDirectoryItem(HANDLE, url, list_item, is_folder)
 
     xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     xbmcplugin.endOfDirectory(HANDLE)
