@@ -27,7 +27,6 @@ def list_searchables():
     movie_item = xbmcgui.ListItem(label="Movies")
     movie_item.setInfo("video", {
         "title": "Movies",
-        "genre": "Movies",
         "mediatype": "video"
     })
     url = build_url(mode="searchmovie")
@@ -36,7 +35,6 @@ def list_searchables():
     tv_item = xbmcgui.ListItem(label="TV")
     tv_item.setInfo("video", {
         "title": "TV",
-        "genre": "TV",
         "mediatype": "video"
     })
     url = build_url(mode="searchtv")
@@ -52,10 +50,11 @@ def _listing(edy_items):
         list_item = xbmcgui.ListItem(label=link["title"])
         title = link["title"]
         href = link["href"]
+        size = link["size"]
         playable = link["playable"]
         list_item.setInfo("video", {
             "title": title,
-            "genre": title,
+            "size": size,
             "mediatype": "video"
         })
         if playable:
