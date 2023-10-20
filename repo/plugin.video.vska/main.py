@@ -19,6 +19,7 @@ def play_video(url):
     """
     item = xbmcgui.ListItem(offscreen=True)
     item.setPath(url)
+    item.setProperty('IsPlayable', 'true')
     xbmcplugin.setResolvedUrl(HANDLE, True, listitem=item)
 
 def play_movie(external_id):
