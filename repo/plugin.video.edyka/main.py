@@ -52,16 +52,43 @@ def list_movies(query):
     for result in results:
         list_item = xbmcgui.ListItem(label=result["title"])
         title = result["title"]
+        href = result["href"]
         list_item.setInfo("video", {
             "title": title,
             "genre": title,
             "mediatype": "video"
         })
-        url = build_url(mode="listing")
+        url = build_url(mode="listing", source=href)
         xbmcplugin.addDirectoryItem(HANDLE, url, list_item, True)
 
     xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     xbmcplugin.endOfDirectory(HANDLE)
+
+def listing(source):
+    links = get_links(source)
+    xbmcplugin.setPluginCategory(HANDLE, "edyka - listing")
+    xbmcplugin.setContent(HANDLE, "videos")
+    for link in links:
+        list_item = xbmcgui.ListItem(label=link["title"])
+        title = link["title"]
+        href = link["href"]
+        list_item.setInfo("video", {
+            "title": title,
+            "genre": title,
+            "mediatype": "video"
+        })
+        url = build_url(mode="listing", source=href)
+        xbmcplugin.addDirectoryItem(HANDLE, url, list_item, True)
+
+    xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
+    xbmcplugin.endOfDirectory(HANDLE)
+
+def validate_source(source):
+    if not source:
+        raise ValueError("You must provide a source")
+
+    if not source.startswith("https://edytjedhgmdhm.abfhaqrhbnf.workers.dev"):
+        raise ValueError("Source must be for edytjedhgmdhm")
 
 def router(paramstring):
     """
@@ -73,15 +100,19 @@ def router(paramstring):
     if not params:
         list_searchables()
     else:
-        if params["mode"] == "searchmovie":
+        mode = params.get("mode", None)
+        source = params.get("source", None)
+        if mode == "searchmovie":
             query = xbmcgui.Dialog().input('Search movie...', type=xbmcgui.INPUT_ALPHANUM)
             if query:
                 list_movies(query)
             else:
                 quit()
-        elif params["mode"] == "searchtv" or params["mode"] == "listing":
+        elif mode == "searchtv":
             raise NotImplementedError("Not implemented yet")
-
+        elif mode == "listing":
+            validate_source(source)
+            listing(source)
 
 if __name__ == '__main__':
     router(sys.argv[2][1:])
