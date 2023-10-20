@@ -2,24 +2,33 @@
 edyka
 """
 import sys
-from urllib import urlencode
-from urlparse import parse_qsl
 
+# pylint: disable=import-error
 import xbmcgui
 import xbmcplugin
-from xbmcaddon import Addon
+# pylint: enable=import-error
 
 from resources.lib.extractor import search_movie, search_tv, get_links
+
+if sys.version_info >= (3,0,0):
+    from urllib.parse import urlencode, parse_qsl
+else:
+    from urllib import urlencode
+    from urlparse import parse_qsl
 
 URL = sys.argv[0]
 HANDLE = int(sys.argv[1])
 
-def build_url(**kwargs):
+def _build_url(**kwargs):
+    """
+    Creates a URL for the addon, e.g.
+    plugin://plugin.video.edyka/mode=searchtv
+    """
     return URL + "?" + urlencode(kwargs)
 
 def list_searchables():
     """
-    lists movie and tv list item
+    Addon entry point. Displays 'Movie' and 'TV' buttons
     """
     xbmcplugin.setPluginCategory(HANDLE, "edyka")
     xbmcplugin.setContent(HANDLE, "videos")
@@ -29,7 +38,7 @@ def list_searchables():
         "title": "Movies",
         "mediatype": "video"
     })
-    url = build_url(mode="searchmovie")
+    url = _build_url(mode="searchmovie")
     xbmcplugin.addDirectoryItem(HANDLE, url, movie_item, True)
 
     tv_item = xbmcgui.ListItem(label="TV")
@@ -37,13 +46,16 @@ def list_searchables():
         "title": "TV",
         "mediatype": "video"
     })
-    url = build_url(mode="searchtv")
+    url = _build_url(mode="searchtv")
     xbmcplugin.addDirectoryItem(HANDLE, url, tv_item, True)
 
-    xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
+    xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_SIZE)
     xbmcplugin.endOfDirectory(HANDLE)
 
 def _listing(edy_items):
+    """
+    Creates a virtual Kodi directory with list items
+    """
     xbmcplugin.setPluginCategory(HANDLE, "edyka - listing")
     xbmcplugin.setContent(HANDLE, "videos")
     for link in edy_items:
@@ -64,29 +76,44 @@ def _listing(edy_items):
         else:
             m = "listing"
             is_folder = True
-        url = build_url(mode=m, source=href)
+        url = _build_url(mode=m, source=href)
         xbmcplugin.addDirectoryItem(HANDLE, url, list_item, is_folder)
 
     xbmcplugin.addSortMethod(HANDLE, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     xbmcplugin.endOfDirectory(HANDLE)
 
 def list_movies(query):
+    """
+    Searches for movies with given query and displays them in a Kodi directory
+    """
     results = search_movie(query)
     _listing(results)
 
 def list_tv(query):
+    """
+    Searches for shows with given query and displays them in a Kodi directory
+    """
     results = search_tv(query)
     _listing(results)
 
 def list_links(source):
+    """
+    Displays a list of entries based on what is returned from an edy URL
+    """
     links = get_links(source)
     _listing(links)
 
 def play(source):
+    """
+    Plays a video from a URL
+    """
     play_item = xbmcgui.ListItem(path=source)
     xbmcplugin.setResolvedUrl(HANDLE, True, listitem=play_item)
 
 def validate_source(source):
+    """
+    Checks if the given source is valid or not
+    """
     if not source:
         raise ValueError("You must provide a source")
 

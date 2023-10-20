@@ -1,6 +1,7 @@
 """
 extract from source
 """
+# pylint: disable=line-too-long
 import sys
 import re
 import requests
@@ -24,7 +25,10 @@ def _clamp(size):
     return size
 
 def get_links(url):
-    response = requests.get(url)
+    """
+    Get all the links from an edy directory
+    """
+    response = requests.get(url, timeout=60)
     pattern = r'<tr class="file">.*?<a href="([^"]+)">([^<]+)</a>.*?<td data-order="([^"]+)">.*?</tr>'
     matches = re.finditer(pattern=pattern, string=response.text, flags=re.DOTALL)
     links = []
@@ -46,9 +50,15 @@ def _search(url, query):
     return results
 
 def search_tv(query):
+    """
+    Searches for a TV show, returns a list of results
+    """
     url = "https://edytjedhgmdhm.abfhaqrhbnf.workers.dev/tvs/"
     return _search(url, query)
 
 def search_movie(query):
+    """
+    Searches for a movie, returns a list of results
+    """
     url = "https://edytjedhgmdhm.abfhaqrhbnf.workers.dev/movies/"
     return _search(url, query)
