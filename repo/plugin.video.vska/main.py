@@ -17,13 +17,8 @@ def play_video(url):
     """
     huhu you'll never guess what this function does
     """
-    item = xbmcgui.ListItem(path=url)
-    item.setInfo("video", {
-        "title": "vska play",
-        "mediatype": "video"
-    })
-    item.setProperty('IsPlayable', 'true')
-    xbmcplugin.setResolvedUrl(HANDLE, True, listitem=item)
+    play_item = xbmcgui.ListItem(path=url)
+    xbmcplugin.setResolvedUrl(HANDLE, True, listitem=play_item)
 
 def play_movie(external_id):
     """
