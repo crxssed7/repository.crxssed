@@ -4,6 +4,8 @@ extract from source
 import re
 import requests
 
+from HTMLParser import HTMLParser
+
 def _is_playable(href):
     playables = [".mkv", ".mp4", ".avi"]
     for formt in playables:
@@ -12,6 +14,7 @@ def _is_playable(href):
     return False
 
 def get_links(url):
+    parser = HTMLParser()
     response = requests.get(url)
     pattern = r'<tr class="file">.*?<a href="([^"]+)">([^<]+)</a>'
     matches = re.finditer(pattern=pattern, string=response.text, flags=re.DOTALL)
@@ -21,7 +24,7 @@ def get_links(url):
         text = m.group(2)
         playable = _is_playable(href)
 
-        links.append({"title": text, "href": url + href, "playable": playable})
+        links.append({"title": text, "href": parser.unescape(url + href), "playable": playable})
     return links
 
 def _search(url, query):
@@ -40,18 +43,19 @@ def search_movie(query):
     url = "https://edytjedhgmdhm.abfhaqrhbnf.workers.dev/movies/"
     return _search(url, query)
 
-# q = "wizards of Wav"
-# results = search_tv(q)
-# result = results[0] # simulate choice
-# seasons = get_links(result["href"])
-# season = seasons[0] # simulate choice
-# episodes = get_links(season["href"])
-# episode = episodes[0] # simulate choice
-# print(episode)
+q = "suite"
+results = search_tv(q)
+result = results[0] # simulate choice
+print(result["href"])
+seasons = get_links(result["href"])
+season = seasons[0] # simulate choice
+episodes = get_links(season["href"])
+episode = episodes[0] # simulate choice
+print(episode)
 
-# q = "The imitation game"
-# results = search_movie(q)
-# result = results[0]
-# links = get_links(result["href"])
-# movie = links[0]
-# print(movie)
+q = "The imitation game"
+results = search_movie(q)
+result = results[0]
+links = get_links(result["href"])
+movie = links[0]
+print(movie)
