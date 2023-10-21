@@ -1,0 +1,3 @@
+[submodule "repo/plugin.video.edyka"]
+	path = repo/plugin.video.edyka
+	url = https://github.com/crxssed7/plugin.video.edyka
