@@ -61,8 +61,8 @@
             <fanart>fanart.jpg</fanart>
         </assets>
     </extension>
-</addon><addon id="repository.crxssed" name="repository.crxssed" version="1.0" provider-name="crxssed7">
-    <extension point="xbmc.addon.repository" name="Example Repository">
+</addon><addon id="repository.crxssed" name="repository.crxssed" version="1.1" provider-name="crxssed7">
+    <extension point="xbmc.addon.repository" name="crxssed's repository">
         <dir>
             <info compressed="false">https://raw.githubusercontent.com/crxssed7/repository.crxssed/master/repo/zips/addons.xml</info>
             <checksum>https://raw.githubusercontent.com/crxssed7/repository.crxssed/master/repo/zips/addons.xml.md5</checksum>
@@ -71,8 +71,8 @@
     </extension>
     <extension point="xbmc.addon.metadata">
         <summary>repository.crxssed</summary>
-        <description>A really cool repo lol</description>
-        <disclaimer />
+        <description>crxssed's personal collection on Kodi addons. not for public use.</description>
+        <disclaimer>https://crxssed.dev/repository.crxssed/</disclaimer>
         <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
