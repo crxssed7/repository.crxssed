@@ -39,7 +39,7 @@
             <fanart>fanart.jpg</fanart>
         </assets>
     </extension>
-</addon><addon id="plugin.video.vska" name="vska" version="0.0.20" provider-name="crxssed">
+</addon><addon id="plugin.video.vska" name="vska" version="0.0.21" provider-name="crxssed">
     <requires>
         <import addon="xbmc.python" version="2.25.0" />
         <import addon="script.module.requests" />
