@@ -4,9 +4,12 @@ My collection of personal Kodi addons. I developed these addons to learn more ab
 
 ## addons
 
-🟩 = working
-🟥 = not working
-🟨 = not tested
+| key |             |
+|-----|-------------|
+| 🟩  | working     |
+| 🟥  | not working |
+| 🟨  | not tested  |
+
 
 - edyka
     - Leia 🟩
