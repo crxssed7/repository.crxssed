@@ -52,11 +52,8 @@ def router(paramstring):
 
     if season and episode:
         play_episode(external_id=external_id, season=season, episode_number=episode_number)
-    elif not season and not episode:
-        play_movie(external_id=external_id)
     else:
-        raise ValueError("You need to pass both season and episode or neither")
-
+        play_movie(external_id=external_id)
 
 if __name__ == '__main__':
     router(sys.argv[2][1:])
