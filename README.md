@@ -14,8 +14,8 @@ My collection of personal Kodi addons. I developed these addons to learn more ab
 - edyka
     - Leia 🟩
     - Matrix 🟨
-    - Nexus 🟨
+    - Nexus 🟩
 - vska
     - Leia 🟩
     - Matrix 🟨
-    - Nexus 🟨
+    - Nexus 🟩
